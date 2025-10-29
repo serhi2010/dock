@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Оцінки для курсу {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>📘 Оцінки для курсу: <strong>{{ course.title }}</strong></h2>
+
+  <table class="table table-bordered table-striped mt-4">
+    <thead class="table-light">
+      <tr>
+        <th>👤 Учень</th>
+        {% for lesson in lessons %}
+          <th>{{ lesson.title }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+        <tr>
+          <td>{{ student.get_full_name }}</td>
+          {% for lesson in lessons %}
+            <td class="text-center">
+              {% if grade_map.student.id %}
+                {% if grade_map.student.id.lesson.id %}
+                  <span class="fw-bold">{{ grade_map.student.id.lesson.id.score }}</span>
+                {% else %}
+                  <a href="{% url 'grades:grade_student' course.id student.id %}?lesson={{ lesson.id }}" class="btn btn-sm btn-outline-primary">Оцінити</a>
+                {% endif %}
+              {% else %}
+                <a href="{% url 'grades:grade_student' course.id student.id %}?lesson={{ lesson.id }}" class="btn btn-sm btn-outline-primary">Оцінити</a>
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

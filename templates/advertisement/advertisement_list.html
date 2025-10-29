@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>🗞️ Оголошення</h2>
+  {% if request.user.role == 'teacher' or request.user.is_staff %}
+    <a href="{% url 'advertisement:advertisement_create' %}" class="btn btn-outline-primary mb-3">➕ Створити оголошення</a>
+  {% endif %}
+  {% for ad in advertisements %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ ad.title }}</h5>
+        <p class="card-text">{{ ad.description|truncatewords:20 }}</p>
+        <a href="{% url 'advertisement:advertisement_detail' ad.pk %}" class="btn btn-sm btn-primary">🔍 Детальніше</a>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">Немає оголошень.</p>
+  {% endfor %}
+</div>
+{% endblock %}

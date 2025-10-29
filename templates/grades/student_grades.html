@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Мої оцінки{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>📊 Ваші оцінки</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Урок</th>
+        <th>Оцінка</th>
+        <th>Коментар</th>
+        <th>Дата</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for grade in grades %}
+        <tr>
+          <td>{{ grade.lesson.title }}</td>
+          <td>{{ grade.score }}</td>
+          <td>{{ grade.comment }}</td>
+          <td>{{ grade.created_at|date:"d.m.Y H:i" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

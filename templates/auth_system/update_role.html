@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Зміна ролі{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Змінити роль користувача <strong>{{ user.username }}</strong></h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">💾 Зберегти</button>
+    <a href="{% url 'admin_panel' %}" class="btn btn-secondary ms-2">↩️ Назад</a>
+  </form>
+</div>
+{% endblock %}

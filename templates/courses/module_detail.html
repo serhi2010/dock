@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Модуль: {{ module.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>{{ module.title }}</h2>
+  <p class="text-muted">{{ module.description }}</p>
+
+  {% if module.lessons.all %}
+    <h5 class="mt-4">📚 Уроки</h5>
+    <ul class="list-group">
+      {% for lesson in module.lessons.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ lesson.title }}</strong><br>
+            <span class="text-muted">{{ lesson.content|truncatewords:20 }}</span>
+          </div>
+          <a href="{% url 'courses:lesson_detail' lesson.id %}" class="btn btn-sm btn-outline-primary">🔍 Переглянути</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">У цьому модулі ще немає уроків.</p>
+  {% endif %}
+
+  <a href="{% url 'courses:course_detail' module.course.id %}" class="btn btn-secondary mt-4">↩️ Назад до курсу</a>
+</div>
+{% endblock %}

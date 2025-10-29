@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Додати модуль{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>➕ Додати модуль до курсу: {{ course.title }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">💾 Зберегти модуль</button>
+  </form>
+</div>
+{% endblock %}

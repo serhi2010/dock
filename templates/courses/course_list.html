@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">📚 Курси</h2>
+    {% if request.user.is_authenticated and request.user.role == 'teacher' %}
+      <a href="{% url 'courses:course_create' %}" class="btn btn-primary">➕ Створити курс</a>
+    {% endif %}
+  </div>
+
+  {% if courses %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for course in courses %}
+        <div class="col">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ course.title }}</h5>
+              <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+              <p class="text-muted small mb-2">👨‍🏫 Вчитель: {{ course.teacher.get_full_name }}</p>
+              <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-outline-primary">Переглянути</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-secondary text-center">
+      Курси ще не додані.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Курс: {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <!-- 🔹 Інформація про курс -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="card-title">{{ course.title }}</h2>
+      <p class="card-text">{{ course.description }}</p>
+      <p class="text-muted small">👨‍🏫 Вчитель: {{ course.teacher.get_full_name }}</p>
+
+      {% if request.user.is_authenticated %}
+        {% if request.user.role == 'teacher' and request.user == course.teacher %}
+          <a href="{% url 'courses:course_edit' course.id %}" class="btn btn-warning">✏️ Редагувати курс</a>
+          <a href="{% url 'courses:add_module' course.id %}" class="btn btn-success ms-2">➕ Додати модуль</a>
+        {% elif request.user.role == 'student' %}
+          {% if request.user in course.students.all %}
+            <form method="post" action="{% url 'courses:unenroll_course' course.id %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-warning">🚪 Вийти з курсу</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'courses:enroll_course' course.id %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">✅ Записатись</button>
+            </form>
+          {% endif %}
+        {% endif %}
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline-primary">🔐 Увійдіть, щоб записатись</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 🗂️ Модулі курсу -->
+  <div>
+    <h4 class="mb-3">🗂️ Модулі курсу</h4>
+    {% if modules %}
+      <ul class="list-group">
+        {% for module in modules %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ module.title }}</strong><br>
+              <small class="text-muted">{{ module.description }}</small>
+            </div>
+            <div class="text-end">
+              <span class="badge bg-secondary me-2">{{ module.lessons.count }} уроків</span>
+              <a href="{% url 'courses:module_detail' module.id %}" class="btn btn-sm btn-outline-secondary me-2">
+                📘 Переглянути модуль
+              </a>
+              {% if request.user.is_authenticated and request.user.role == 'teacher' and request.user == course.teacher %}
+                <a href="{% url 'courses:add_lesson' module.id %}" class="btn btn-sm btn-outline-primary">➕ Додати урок</a>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-secondary">Модулі ще не додані.</div>
+    {% endif %}
+  </div>
+
+  <!-- 🧑‍🎓 Список учнів -->
+  {% if request.user == course.teacher %}
+    <div class="mt-5">
+      <h4>🧑‍🎓 Учні, записані на курс:</h4>
+      {% if course.students.all %}
+        <ul class="list-group">
+          {% for student in course.students.all %}
+            <li class="list-group-item">
+              {{ student.get_full_name }} — {{ student.email }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-info">Наразі жоден учень не записаний на курс.</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
