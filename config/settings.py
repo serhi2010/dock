@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-@ud+8m!7%e!@7gj+4rl&c!(oe+ql$cpf7b((2-f56)cnr)c-qo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'dock-v22j.onrender.com',   # твій реальний домен на Render
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -43,8 +47,11 @@ INSTALLED_APPS = [
 
 
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
